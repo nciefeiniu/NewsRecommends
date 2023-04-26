@@ -34,3 +34,8 @@ def getpidandkill(filename):
 
     # 调用kill函数，终止进程
     kill(pid=pid)
+
+
+if __name__ == '__main__':
+    getpidandkill('../irlSpider')
+    getpidandkill('../detailSpider')

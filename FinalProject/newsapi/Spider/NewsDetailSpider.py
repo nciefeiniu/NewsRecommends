@@ -14,13 +14,15 @@ from selenium.webdriver.chrome.options import Options
 
 from Spider.OperationMysql import OperationMysql
 
+from multiprocessing.pool import ThreadPool
+
 logger = logging.getLogger(__name__)
 logger.setLevel(level=logging.INFO)
 formatter = logging.Formatter('%(asctime)s - %(levelname)-7s - %(message)s')
 
 # 2. 初始化handler,并配置formater
 log_file_handler = TimedRotatingFileHandler(filename="Spider/Detaillogs/log.log",
-                                            when="S", interval=5,
+                                            when="S", interval=5, encoding='utf-8',
                                             backupCount=20)
 log_file_handler.setFormatter(formatter)
 
@@ -135,7 +137,7 @@ def getvideourl(url):
         chrome_options = Options()
         chrome_options.add_argument('--headless')
         chrome_options.add_argument('--disable-gpu')
-        driver = webdriver.Chrome(executable_path='C:\Program Files\Google\Chrome\Application\chromedriver.exe',
+        driver = webdriver.Chrome(executable_path='./chromedriver.exe',
                                   options=chrome_options)
         driver.get(url)
         regex1 = re.compile('playsinline="playsinline" src="(.*?)"')
@@ -153,7 +155,8 @@ def getdatabaseurl():
         @:param None
     '''
     op_mysql = OperationMysql()
-    searchresult = op_mysql.search_all('select url, type from news_api_urlcollect where handle=0')
+    searchresult = op_mysql.search_all(
+        "select url, type from news_api_urlcollect where handle=0 and time >= '2023-01-01' order by time desc")
     op_mysql.conn.close()
     if len(searchresult) == 0:
         logger.warning(" No such url to get detail")
@@ -185,6 +188,7 @@ def insertdatabase(news, geturl, Type):
         op_mysql.update_one(sql)
     except Exception:
         print('数据插入失败')
+        logger.error("Insert News_url Error!!")
 
 
 def deleteurl(url):
@@ -197,6 +201,21 @@ def deleteurl(url):
     op_mysql.delete_one(sql)
 
 
+def spider_detail_page(url: dict):
+    news = getnewsdetail(url['url'])
+    if news == None:
+        pass
+    Type = url['type']
+    if not news:
+        deleteurl(url)
+    else:
+        try:
+            insertdatabase(news=news, geturl=url, Type=Type)
+        except Exception:
+            return None
+            logger.error("Insert News_url Error!!")
+
+
 def insertalldetial():
     '''
         @Description：循环进行urlcollect
@@ -204,21 +223,15 @@ def insertalldetial():
     '''
     logger.info("Begin Collect News_Url")
     urllist = getdatabaseurl()
+
+    pool = ThreadPool(8)
+
     if None != urllist:
         for url in urllist:
             logger.info(" Begin to handle url: %s" % url['url'])
-            news = getnewsdetail(url['url'])
-            if news == None:
-                pass
-            Type = url['type']
-            if news == None:
-                deleteurl(url)
-            else:
-                try:
-                    insertdatabase(news=news, geturl=url, Type=Type)
-                except Exception:
-                    return None
-                    logger.error("Insert News_url Error!!")
+            pool.apply_async(spider_detail_page, (url,))
+    pool.close()
+    pool.join()
 
 
 sched = BlockingScheduler()

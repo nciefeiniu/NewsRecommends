@@ -20,7 +20,7 @@ cursor.execute("SELECT VERSION()")
             host='127.0.0.1',  # 连接的数据库服务器主机名
             port=3306,  # 数据库端口号
             user='root',  # 数据库登录用户名
-            passwd='root',
+            passwd='123456',
             db='news',  # 数据库名称
             charset='utf8',  # 连接编码
             cursorclass=pymysql.cursors.DictCursor

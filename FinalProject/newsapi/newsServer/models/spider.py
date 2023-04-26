@@ -66,31 +66,30 @@ def getSpiderPageData(request):
         @Description：获取爬虫系统管理页数据
         @:param None
     '''
+
     if request.method == "GET":
         statelist = spiderstate.objects.all()
         urllist = urlcollect.objects.all()
         urlloglist = dict()
         detaillist = dict()
-        original_data_path = "Spider/Detaillogs/"
         files = os.listdir('./Spider/Detaillogs')
         for file in files:
-            if str(file) == 'log.log':
+            if str(file) in ('log.log', '.keep'):
                 pass
             time = file[8:].replace("_", ' ')
             time = time[:13] + ':' + time[14:16] + ':' + time[17:]
-            filepath = os.path.join('D:\\FinalProject\\newsapi\\Spider\\Detaillogs', file)
+            filepath = os.path.join('./Spider/Detaillogs', file)
             urlloglist[file] = {
                 'time': time,
                 'filepath': filepath
             }
-        original_data_path = "Spider/Urllogs/"
-        files = os.listdir(original_data_path)
+        files = os.listdir('./Spider/Urllogs/')
         for file in files:
-            if str(file) == 'log.log':
+            if str(file) in ('log.log', '.keep'):
                 pass
             time = file[8:].replace("_", ' ')
             time = time[:13] + ':' + time[14:16] + ':' + time[17:]
-            filepath = os.path.join('D:\\FinalProject\\newsapi\\Spider\\Urllogs', file)
+            filepath = os.path.join('./Spider/Urllogs/', file)
             detaillist[file] = {
                 'time': time,
                 'filepath': filepath
