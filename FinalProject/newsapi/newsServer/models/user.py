@@ -1,5 +1,6 @@
 import datetime
 import json
+import random
 
 from django.core import serializers
 from django.db.models import Q
@@ -72,7 +73,8 @@ def del_comments(request):
             sendMessage = "尊敬的用户您好，您在标题《" + newsdetail.objects.filter(news_id=newsid)[
                 0].title + "》的新闻评论，存在言论不当的问题，评论内容已被管理员封禁！"
             time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            message(userid=userid, message=sendMessage, newsid=newsid, time=time, title="来自管理员的信息", hadread=0).save()
+            message(userid=userid, message=sendMessage, newsid=newsid, time=time, title="来自管理员的信息",
+                    hadread=0).save()
             if res == 0:
                 return JsonResponse({"status": "100", "message": "Fail."})
             else:
@@ -82,7 +84,8 @@ def del_comments(request):
             sendMessage = "尊敬的用户您好，您在标题《" + newsdetail.objects.filter(news_id=newsid)[
                 0].title + "》的新闻评论，已被管理员解除封禁，给您带来不便，十分抱歉！"
             time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            message(userid=userid, message=sendMessage, newsid=newsid, time=time, title="来自管理员的信息", hadread=0).save()
+            message(userid=userid, message=sendMessage, newsid=newsid, time=time, title="来自管理员的信息",
+                    hadread=0).save()
             if res == 0:
                 return JsonResponse({"status": "100", "message": "Fail."})
             else:
@@ -267,10 +270,11 @@ def getRecNes(request):
        @:param userid---用户id
    '''
     if request.method == "GET":
+        recnewsdetaillist = list()
+
         userid = request.GET.get('userid')
         if userid != None:
             recnewslist = recommend.objects.filter(userid=userid, hadread=0).order_by('-time')
-            recnewsdetaillist = list()
             for renews in recnewslist:
                 recnewsdetailfromdata = newsdetail.objects.filter(news_id=renews.newsid)
                 data = {
@@ -284,6 +288,20 @@ def getRecNes(request):
                     'comments': recnewsdetailfromdata[0].comments,
                 }
                 recnewsdetaillist.append(data)
+
+        if len(recnewsdetaillist) < 10:
+            # 如果推荐不够，就从浏览量和评论量大于100的新闻中随机取
+            recnewsdetaillist += [{'newsid': recnewsdetailfromdata.news_id,
+                                   'title': recnewsdetailfromdata.title,
+                                   'date': recnewsdetailfromdata.date,
+                                   'species': random.randint(0, 3),
+                                   'pic_url': recnewsdetailfromdata.pic_url,
+                                   'mainpage': recnewsdetailfromdata.mainpage,
+                                   'readnum': recnewsdetailfromdata.readnum,
+                                   'comments': recnewsdetailfromdata.comments, } for recnewsdetailfromdata in
+                                  newsdetail.objects.filter(readnum__gt=100, comments__gt=100).order_by('?')[
+                                  :100 - len(recnewsdetaillist)]]
+
         return JsonResponse({"status": "200", 'newslist': recnewsdetaillist})
     else:
         return JsonResponse({"status": "200", 'newslist': None})
