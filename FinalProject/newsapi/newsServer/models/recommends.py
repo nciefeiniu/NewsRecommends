@@ -72,26 +72,24 @@ def getRecommendPageData(request):
         recommendlist = models.recommend.objects.all()
         analysisloglist = dict()
         reclist = dict()
-        original_data_path = "Recommend/analysis/"
-        files = os.listdir(original_data_path)
+        files = os.listdir('./Recommend/analysis/')
         for file in files:
             if str(file) == 'log.log':
                 pass
             time = file[8:].replace("_", ' ')
             time = time[:13] + ':' + time[14:16] + ':' + time[17:]
-            filepath = os.path.join('D:\\FinalProject\\newsapi\\Recommend\\analysis', file)
+            filepath = os.path.join('./Recommend/analysis/', file)
             analysisloglist[file] = {
                 'time': time,
                 'filepath': filepath
             }
-        original_data_path = "Recommend/recommend/"
-        files = os.listdir(original_data_path)
+        files = os.listdir('./Recommend/recommend/')
         for file in files:
             if str(file) == 'log.log':
                 pass
             time = file[8:].replace("_", ' ')
             time = time[:13] + ':' + time[14:16] + ':' + time[17:]
-            filepath = os.path.join('D:\\FinalProject\\newsapi\\Recommend\\recommend', file)
+            filepath = os.path.join('./Recommend/recommend/', file)
             reclist[file] = {
                 'time': time,
                 'filepath': filepath

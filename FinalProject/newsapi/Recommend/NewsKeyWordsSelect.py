@@ -18,8 +18,9 @@ formatter = logging.Formatter('%(asctime)s - %(levelname)-7s - %(message)s')
 
 # 2. 初始化handler,并配置formater
 log_file_handler = TimedRotatingFileHandler(filename="Recommend/analysis/kwg.log",
-                                            when="S", interval=5,
+                                            when="M", interval=1,
                                             backupCount=20)
+log_file_handler.suffix = "%Y-%m-%d_%H-%M-%S.log"
 log_file_handler.setFormatter(formatter)
 
 # 3. 向logger对象中添加handler
@@ -90,7 +91,7 @@ class SelectKeyWord:
         news_key_words = list()
         # 加载停用词表
 
-        stop_words_list = [line.strip() for line in open("Recommend/stopwords/stop_words.txt", 'r').readlines()]
+        stop_words_list = [line.strip() for line in open("./Recommend/stopwords/stop_words.txt", 'r').readlines()]
         for new_id in self.news_dict.keys():
             if self._type == 1:
                 # allowPOS 提取地名、名词、动名词、动词
@@ -139,14 +140,14 @@ class SelectKeyWord:
             @Description：将关键词获取结果写入文件
             @:param None
         '''
-        fw = open("Recommend/data/keywords/1.txt", "w", encoding="utf-8")
+        fw = open("./Recommend/data/keywords/1.txt", "w", encoding="utf-8")
         fw.write("\n".join(self.key_words))
         fw.close()
 
 
 def splitTxt():
-    source_dir = 'Recommend/data/keywords/1.txt'
-    target_dir = 'Recommend/data/keywords/split/'
+    source_dir = './Recommend/data/keywords/1.txt'
+    target_dir = './Recommend/data/keywords/split/'
 
     # 计数器
     flag = 0

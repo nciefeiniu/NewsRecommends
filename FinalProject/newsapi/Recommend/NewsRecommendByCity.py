@@ -24,8 +24,10 @@ formatter = logging.Formatter('%(asctime)s - %(levelname)-7s - %(message)s')
 
 # 2. 初始化handler,并配置formater
 log_file_handler = TimedRotatingFileHandler(filename="Recommend/recommend/clg.log",
-                                            when="S", interval=10,
+                                            when="M", interval=1,
                                             backupCount=20)
+log_file_handler.suffix = "%Y-%m-%d_%H-%M-%S.log"
+
 log_file_handler.setFormatter(formatter)
 
 # 3. 向logger对象中添加handler
@@ -108,7 +110,7 @@ class NewsRecommendByCity():
            @Description：获取新闻对象
            @:param
         '''
-        original_data_path = "Recommend/data/keywords/"
+        original_data_path = "./Recommend/data/keywords/"
         files = os.listdir(original_data_path)
         for file in files:
             return original_data_path + file
