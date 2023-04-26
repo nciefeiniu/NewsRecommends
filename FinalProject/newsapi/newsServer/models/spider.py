@@ -72,7 +72,7 @@ def getSpiderPageData(request):
         urlloglist = dict()
         detaillist = dict()
         original_data_path = "Spider/Detaillogs/"
-        files = os.listdir(original_data_path)
+        files = os.listdir('./Spider/Detaillogs')
         for file in files:
             if str(file) == 'log.log':
                 pass
