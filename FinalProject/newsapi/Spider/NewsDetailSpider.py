@@ -22,8 +22,10 @@ formatter = logging.Formatter('%(asctime)s - %(levelname)-7s - %(message)s')
 
 # 2. 初始化handler,并配置formater
 log_file_handler = TimedRotatingFileHandler(filename="Spider/Detaillogs/log.log",
-                                            when="S", interval=5, encoding='utf-8',
+                                            when="M", interval=1, encoding='utf-8',
                                             backupCount=20)
+log_file_handler.suffix = "%Y-%m-%d_%H-%M-%S.log"
+
 log_file_handler.setFormatter(formatter)
 
 # 3. 向logger对象中添加handler
@@ -137,6 +139,8 @@ def getvideourl(url):
         chrome_options = Options()
         chrome_options.add_argument('--headless')
         chrome_options.add_argument('--disable-gpu')
+        chrome_options.add_argument("--disable-3d-apis")
+
         driver = webdriver.Chrome(executable_path='./chromedriver.exe',
                                   options=chrome_options)
         driver.get(url)
@@ -144,7 +148,8 @@ def getvideourl(url):
         video_url = regex1.findall(driver.page_source)
         for numbers in range(len(video_url)):
             video_url[numbers] = video_url[numbers].replace("amp;", "")
-    except Exception:
+    except Exception as e:
+        print(e)
         video_url = []
     return video_url
 
@@ -247,4 +252,7 @@ def begindetailcollect(time):
 
 
 def endsched():
-    sched.pause_job("detailcollect1")
+    try:
+        sched.pause_job("detailcollect1")
+    except Exception as e:
+        print(e)

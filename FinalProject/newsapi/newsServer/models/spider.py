@@ -75,7 +75,7 @@ def getSpiderPageData(request):
         files = os.listdir('./Spider/Detaillogs')
         for file in files:
             if str(file) in ('log.log', '.keep'):
-                pass
+                continue
             time = file[8:].replace("_", ' ')
             time = time[:13] + ':' + time[14:16] + ':' + time[17:]
             filepath = os.path.join('./Spider/Detaillogs', file)
@@ -86,7 +86,7 @@ def getSpiderPageData(request):
         files = os.listdir('./Spider/Urllogs/')
         for file in files:
             if str(file) in ('log.log', '.keep'):
-                pass
+                continue
             time = file[8:].replace("_", ' ')
             time = time[:13] + ':' + time[14:16] + ':' + time[17:]
             filepath = os.path.join('./Spider/Urllogs/', file)

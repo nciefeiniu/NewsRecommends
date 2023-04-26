@@ -22,8 +22,9 @@ formatter = logging.Formatter('%(asctime)s - %(levelname)-7s - %(message)s')
 
 # 2. 初始化handler,并配置formater
 log_file_handler = TimedRotatingFileHandler(filename="Spider/Urllogs/log.log",
-                                            when="S", interval=5, encoding='utf-8',
+                                            when="M", interval=1, encoding='utf-8',
                                             backupCount=20)
+log_file_handler.suffix = "%Y-%m-%d_%H-%M-%S.log"
 log_file_handler.setFormatter(formatter)
 
 # 3. 向logger对象中添加handler
@@ -87,4 +88,7 @@ def begincollect(time):
 
 
 def endsched():
-    sched.shutdown()
+    try:
+        sched.shutdown()
+    except Exception as e:
+        print(e)
