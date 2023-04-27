@@ -22,6 +22,21 @@
         </Select>
         <p class="error">{{pwdError}}</p>
       </div>
+      <div class="input-c">
+        <Input type="text" v-model="studentCode" prefix="md-lock" placeholder="学号" clearable @on-blur="verifyStudentCode"
+               @keyup.enter.native="submit" />
+        <p class="error">{{studentCodeError}}</p>
+      </div>
+      <div class="input-c">
+        <Input type="text" v-model="phone" prefix="md-lock" placeholder="手机号" clearable @on-blur="verifyPhone"
+               @keyup.enter.native="submit" />
+        <p class="error">{{phoneError}}</p>
+      </div>
+      <div class="input-c">
+        <Input type="text" v-model="email" prefix="md-lock" placeholder="邮箱" clearable @on-blur="verifyEmail"
+               @keyup.enter.native="submit" />
+        <p class="error">{{emialError}}</p>
+      </div>
       <Button :loading="isShowLoading" class="submit" type="primary" @click="submit">注册</Button>
       <p class="account"><span @click="tologin">已有账号？</span></p>
     </div>
@@ -47,6 +62,9 @@ export default {
   },
   data() {
     return {
+      studentCode: '',
+      phone: '',
+      email: '',
       username: '',
       updata: '',
       gender: '',
@@ -71,6 +89,9 @@ export default {
       pwdError: '',
       isShowLoading: false,
       bg: {},
+      phoneError: '',
+      studentCodeError: '',
+      emialError: ''
     }
   },
   watch: {
@@ -83,9 +104,9 @@ export default {
   },
   methods: {
     ok() {
-      if (this.account !== '' && this.pwd !== '' && this.gender !== '' && this.username !== ''){
+      if (this.account !== '' && this.pwd !== '' && this.gender !== '' && this.username !== '' && this.phone !== '' && this.studentCode !== '' && this.email !== ''){
         this.isShowLoading = true
-        register(this.account, this.pwd, this.username, String(this.taglist.join()), this.gender).then(res => {
+        register(this.account, this.pwd, this.username, String(this.taglist.join()), this.gender, this.phone, this.email, this.studentCode).then(res => {
           if (res.message === 'Success.'){
             sessionStorage.setItem('userImg', '')
             sessionStorage.setItem('userName', this.username)
@@ -220,9 +241,30 @@ export default {
         this.accountError = '账号不能为空'
       }
     },
+    verifyStudentCode() {
+      if (this.studentCode === '') {
+        this.studentCodeError = '学号不能为空'
+      }
+    },
     verifyPwd() {
       if (this.pwd === '') {
         this.pwdError = '密码不能为空'
+      }
+    },
+    verifyPhone() {
+      if (this.phone === '') {
+        this.phoneError = '手机号不能为空'
+      } else if (this.phone.length !== 11) {
+        this.phoneError = '手机号格式错误'
+      }
+    },
+    verifyEmail() {
+      let svgg =/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+
+      if (this.email === '') {
+        this.emialError = '邮箱不能为空'
+      } else if (svgg.test(this.email) !== true) {
+        this.emialError = '邮箱格式错误'
       }
     },
     tologin() {

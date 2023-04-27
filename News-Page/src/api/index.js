@@ -16,13 +16,17 @@ export function getTourists(){
   return req
 }
 
-export function register(userid, password, username,  words, gender){
+export function register(userid, password, username,  words, gender, phone, email, studentCod){
   let data = {
     userid: userid,
     password: password,
     tags: words,
     gender: gender,
     username: username,
+    email: email,
+    phone: phone,
+    studentCode: studentCod
+
   }
   console.log(data)
   let req = request.post('api/user/regis/', data)
@@ -31,6 +35,11 @@ export function register(userid, password, username,  words, gender){
 
 export function getPicture(){
   let res = request.get('api/news/pict/')
+  return res
+}
+
+export function getDailyUpdates(){
+  const res = request.get('api/daily_updates/')
   return res
 }
 

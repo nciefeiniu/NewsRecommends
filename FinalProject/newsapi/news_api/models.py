@@ -13,6 +13,10 @@ class user(models.Model):
     tags = models.CharField(max_length=2000)
     tagsweight = models.CharField(max_length=2000)
     headPortrait = models.CharField(max_length=255)
+
+    phone = models.CharField('手机号', max_length=11, null=True, blank=True, )
+    email = models.EmailField('邮箱', null=True, blank=True,)
+    student_code = models.CharField('学号', max_length=32, null=True, blank=True,)
     objects = models.Manager()
 
 

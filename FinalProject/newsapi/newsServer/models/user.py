@@ -212,6 +212,10 @@ def user_register(request):
         password = req['password']
         username = req['username']
         gender = req['gender']
+
+        student_code = req['studentCode']
+        email = req['email']
+        phone = req['phone']
         if gender == '男':
             gender = 1
         elif gender == '女':
@@ -225,7 +229,7 @@ def user_register(request):
         print(tagsweight)
         tagsweight = str(tagsweight).replace("\'", "\"")
         add_user = user(userid=userid, username=username, gender=gender, ip=ip, password=password, tags=tags,
-                        tagsweight=tagsweight)
+                        tagsweight=tagsweight, phone=phone, email=email, student_code=student_code)
         add_user.save()
         return JsonResponse({"status": 200, "message": "Success."})
     return JsonResponse({"status": 200, "message": "Fail."})
