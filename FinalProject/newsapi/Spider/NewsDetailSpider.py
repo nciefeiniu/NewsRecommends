@@ -135,6 +135,7 @@ def getvideourl(url):
         @Description：获取新闻的视频，使用webdriver.Chrome的无头模式进行页面的完整加载，从而获取到对应的src连接
         @:param None
     '''
+    driver = None
     try:
         chrome_options = Options()
         chrome_options.add_argument('--headless')
@@ -151,6 +152,9 @@ def getvideourl(url):
     except Exception as e:
         print(e)
         video_url = []
+    finally:
+        if driver:
+            driver.close()
     return video_url
 
 
