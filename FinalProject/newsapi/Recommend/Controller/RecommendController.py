@@ -33,10 +33,12 @@ def stopRecommendSystem():
         @Description：推荐系统关闭管理器
         @:param None
     '''
-    sched.remove_job('NewsRecommendByCity')
-    sched.remove_job('NewsRecommendByHotValue')
-    sched.remove_job('NewsRecommendByTags')
-
+    try:
+        sched.remove_job('NewsRecommendByCity')
+        sched.remove_job('NewsRecommendByHotValue')
+        sched.remove_job('NewsRecommendByTags')
+    except Exception as e:
+        print(e)
 
 def beginAnalysisSystem(time):
     '''
@@ -60,8 +62,11 @@ def stopAnalysisSystem():
         @Description：数据分析系统关闭管理器
         @:param None
     '''
-    sched2.remove_job('beginSelectKeyWord')
-    sched2.remove_job('beginCalHotValue')
-    sched2.remove_job('beginCorrelation')
-    sched2.remove_job('beginHotWordLibrary')
-    sched2.shutdown()
+    try:
+        sched2.remove_job('beginSelectKeyWord')
+        sched2.remove_job('beginCalHotValue')
+        sched2.remove_job('beginCorrelation')
+        sched2.remove_job('beginHotWordLibrary')
+        sched2.shutdown()
+    except Exception as e:
+        print(e)
