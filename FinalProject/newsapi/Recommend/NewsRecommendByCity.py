@@ -17,7 +17,6 @@ import requests
 
 from Spider.settings import DB_HOST, DB_USER, DB_PASSWD, DB_NAME, DB_PORT
 
-
 logger = logging.getLogger(__name__)
 logger.setLevel(level=logging.INFO)
 formatter = logging.Formatter('%(asctime)s - %(levelname)-7s - %(message)s')
@@ -32,6 +31,7 @@ log_file_handler.setFormatter(formatter)
 
 # 3. 向logger对象中添加handler
 logger.addHandler(log_file_handler)
+
 
 # http://ip.ws.126.net/ipquery?ip=223.104.63.12
 class NewsRecommendByCity():
@@ -70,7 +70,7 @@ class NewsRecommendByCity():
                 # print(city_key,newstags)
                 if len(city_key & newstags) > 0:
                     city_cor_list.append([int(userid), int(newsid), 1])
-                    logger.info("city_cor_list.append：{}".format(str(userid)+":"+str(newsid)))
+                    logger.info("city_cor_list.append：{}".format(str(userid) + ":" + str(newsid)))
         return city_cor_list
 
     def getRegion(self):
@@ -84,10 +84,17 @@ class NewsRecommendByCity():
             # print(user[0])
             userid = user[0]
             ip = user[1]
-            url = 'http://ip.ws.126.net/ipquery?ip=' + str(ip)
+
+            if user[2]:
+                poslist[userid] = user[2]
+                continue
+            if ip.startswith('127') or ip.startswith('192') or ip.startswith('172'):
+                url = 'https://collect.xmwxxc.com/collect/czip/'
+            else:
+                url = 'https://collect.xmwxxc.com/collect/czip/?ip=' + str(ip)
             res = requests.get(url)
-            pos = re.findall('lo="(.*?)"', res.text)
-            poslist[userid] = list(pos)[0]
+            ip_address = res.json().get('data', {}).get('province')
+            poslist[userid] = ip_address.replace('省', '').replace('市', '')
         return poslist
 
     def getUserData(self):
@@ -96,7 +103,7 @@ class NewsRecommendByCity():
             @:param
         '''
         users = ''
-        sql_s = 'select userid,ip from news_api_user '
+        sql_s = 'select userid,ip,region from news_api_user '
         try:
             self.cursor.execute(sql_s)
             users = self.cursor.fetchall()
@@ -138,7 +145,8 @@ class NewsRecommendByCity():
         print(time)
         for user in self.userslist:
             userid = user[0]
-            sql_u_region = "update news_api_user set region='%s' where userid=%d" % (dict(self.region).get(userid).replace("省", ""), userid)
+            sql_u_region = "update news_api_user set region='%s' where userid=%d" % (
+                dict(self.region).get(userid).replace("省", ""), userid)
             try:
                 self.cursor.execute(sql_u_region)
                 self.db.commit()
