@@ -144,9 +144,9 @@ def getNewsDetailByNewsid(request):
             for keyword in newskeywords:
                 if keyword in weight:
                     weight[keyword] = float(format(weight[keyword] + 0.01, ".3f"))
-                    if weight[keyword] >= 0.1:
-                        usertags.add(keyword)
-                        user.objects.filter(userid=userid).update(tags=str(",".join(usertags)))
+                    # if weight[keyword] >= 0.1:
+                    usertags.add(keyword)
+                    user.objects.filter(userid=userid).update(tags=str(",".join(usertags)))
                 else:
                     weight[keyword] = 0.01
             print(weight)
