@@ -167,4 +167,9 @@ export function updateUserHeadportrait(userid, picurl){
 }
 
 
+export function dailyNews(newsid, userid){
+  let res = request.get('api/daily_news/')
+  return res
+}
+
 

@@ -57,13 +57,18 @@
         </router-link>
       </el-menu-item>
     </el-menu>
+    <HeaderPicture></HeaderPicture>
     <router-view  :key="$route.name + ($route.params.id || '')"></router-view>
   </div>
 </template>
 
 <script>
+
+import HeaderPicture from "../components/HeaderPicture";
+
 export default {
   name: "ContentPage",
+  components: {HeaderPicture},
   data() {
     return {
       category: '1',

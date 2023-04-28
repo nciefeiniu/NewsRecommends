@@ -2,7 +2,7 @@
   <div :height="this.screenHeight">
 <!--    <Scroll :height="this.screenHeight" :width="this.screenWidth">-->
     <HeaderMenu :activename='2' :userImg="imgs"></HeaderMenu>
-    <HeaderPicture></HeaderPicture>
+    <!-- <HeaderPicture></HeaderPicture> -->
     <ContentPage></ContentPage>
     <footer>
       <div style="text-align: center; background: #656565">
