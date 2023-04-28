@@ -47,10 +47,27 @@ npm install
 ```
 前端页面里用户端和管理端是分开的两个项目，所以需要再两个项目下都进行依赖安装！
 
-3.  数据库创建/数据导入
-SQL文件已经放在了Django项目根目录下，自行Navicat或其他方式导入即可
+3. 数据库创建/数据导入
+   SQL文件已经放在了Django项目根目录下，自行Navicat或其他方式导入即可
 
-4.  数据库配置
+   后面加了几个字段：
+
+   ```sql
+   alter table news_api_user
+       add phone varchar(11) null;
+   
+   alter table news_api_user
+       add email varchar(254) null;
+   
+   alter table news_api_user
+       add student_code varchar(32) null;
+   
+   
+   ```
+
+   
+
+4. 数据库配置
 
 ```
 DATABASES = {
