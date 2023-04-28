@@ -31,6 +31,8 @@ from newsServer.models.download import download
 
 from newsServer.models.recommends import beginRecommend, closeRecommendThread, beginAnalysis, getRecommendPageData
 
+from news_api.views import daily_news
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('news/', all_news),
@@ -81,4 +83,5 @@ urlpatterns = [
     path('recommend/startanalysis/', beginAnalysis),
     path('recommend/stopsystem/', closeRecommendThread),
     path('download/logs/', download),
+    path('daily_news/', daily_news)
 ]
